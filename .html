@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Sécurité : la page n'a le droit de charger que ses propres fichiers et de contacter les 2 API de taux -->
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'none'; script-src 'self'; style-src 'self'; connect-src https://open.er-api.com https://api.frankfurter.dev; img-src 'self'; base-uri 'none'; form-action 'none'">
+  <meta name="referrer" content="no-referrer">
+  <title>Convertisseur de devises</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="carte">
+    <h1>Convertisseur de devises</h1>
+
+    <label for="montant">Montant</label>
+    <input type="number" id="montant" value="100" min="0" max="1000000000000" step="any" inputmode="decimal">
+
+    <div class="ligne">
+      <div>
+        <label for="de">De</label>
+        <select id="de"></select>
+      </div>
+
+      <button type="button" id="inverser" aria-label="Inverser les devises">⇄</button>
+
+      <div>
+        <label for="vers">Vers</label>
+        <select id="vers"></select>
+      </div>
+    </div>
+
+    <div class="bloc-resultat">
+      <p id="resultat" aria-live="polite">Chargement des taux...</p>
+      <p id="unitaire"></p>
+      <button type="button" id="copier">Copier le résultat</button>
+    </div>
+
+    <p id="info"></p>
+
+    <section>
+      <h2>Évolution sur 30 jours</h2>
+      <svg id="graphique" viewBox="0 0 300 100" preserveAspectRatio="none" aria-hidden="true">
+        <polyline id="courbe" points=""></polyline>
+      </svg>
+      <p id="info-graphique"></p>
+    </section>
+
+    <section>
+      <h2>Dernières conversions</h2>
+      <ul id="historique"></ul>
+    </section>
+  </main>
+
+  <!-- Mentions RGPD : pas de cookie, pas de traceur, rien n'est stocké -->
+  <footer>
+    Aucun cookie, aucun traceur, aucune donnée personnelle collectée ou stockée.<br>
+    Taux fournis à titre indicatif par
+    <a href="https://www.exchangerate-api.com" target="_blank" rel="noopener noreferrer">ExchangeRate-API</a>
+    et
+    <a href="https://frankfurter.dev" target="_blank" rel="noopener noreferrer">Frankfurter</a>
+    (votre adresse IP leur est transmise lors du chargement des taux). Ne constitue pas un conseil financier.<br>
+    Site réalisé avec l'aide d'une intelligence artificielle (Claude, d'Anthropic).
+  </footer>
+
+  <script src=".js"></script>
+</body>
+</html>

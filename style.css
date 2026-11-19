@@ -1,0 +1,203 @@
+/* Couleurs du thème clair */
+:root {
+  --fond: #f4f4f5;
+  --carte: #ffffff;
+  --texte: #18181b;
+  --discret: #71717a;
+  --bordure: #e4e4e7;
+  --accent: #1d4ed8;
+}
+
+/* Thème sombre automatique si l'ordinateur est réglé en mode sombre */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --fond: #09090b;
+    --carte: #18181b;
+    --texte: #f4f4f5;
+    --discret: #a1a1aa;
+    --bordure: #27272a;
+    --accent: #60a5fa;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* Police sobre déjà installée sur l'ordinateur : pas de Google Fonts (évite d'envoyer l'IP à Google, cf. RGPD) */
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  padding: 32px 16px;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-variant-numeric: tabular-nums; /* chiffres de même largeur, plus lisible */
+  color: var(--texte);
+  background: var(--fond);
+}
+
+.carte {
+  width: 100%;
+  max-width: 440px;
+  padding: 28px;
+  border: 1px solid var(--bordure);
+  border-radius: 12px;
+  background: var(--carte);
+}
+
+h1 {
+  margin: 0 0 20px;
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+
+h2 {
+  margin: 28px 0 10px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--discret);
+}
+
+label {
+  display: block;
+  margin: 14px 0 6px;
+  font-size: 0.85rem;
+  color: var(--discret);
+}
+
+input,
+select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--bordure);
+  border-radius: 8px;
+  font: inherit;
+  color: var(--texte);
+  background: var(--carte);
+}
+
+/* "De" et "Vers" côte à côte avec le bouton au milieu */
+.ligne {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.ligne > div {
+  flex: 1;
+  min-width: 0; /* évite que les longs noms de devise élargissent la carte */
+}
+
+button {
+  border: 1px solid var(--bordure);
+  border-radius: 8px;
+  font: inherit;
+  color: var(--texte);
+  background: var(--carte);
+  cursor: pointer;
+}
+
+button:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+#inverser {
+  width: 42px;
+  height: 42px;
+  flex-shrink: 0;
+  font-size: 1.1rem;
+}
+
+button:focus-visible,
+input:focus-visible,
+select:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.bloc-resultat {
+  margin-top: 24px;
+  padding: 16px;
+  border-radius: 8px;
+  background: var(--fond);
+  text-align: center;
+}
+
+#resultat {
+  margin: 0;
+  font-size: 1.4rem;
+  font-weight: 600;
+}
+
+#unitaire {
+  margin: 6px 0 12px;
+  font-size: 0.85rem;
+  color: var(--discret);
+}
+
+#copier {
+  padding: 6px 14px;
+  font-size: 0.85rem;
+}
+
+#info,
+#info-graphique {
+  margin: 8px 0 0;
+  font-size: 0.8rem;
+  color: var(--discret);
+}
+
+#info {
+  text-align: center;
+}
+
+/* Le graphique : une simple ligne */
+#graphique {
+  width: 100%;
+  height: 90px;
+  border-bottom: 1px solid var(--bordure);
+}
+
+#courbe {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 2;
+  vector-effect: non-scaling-stroke; /* garde une ligne fine même si le graphique est étiré */
+}
+
+#historique {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.9rem;
+}
+
+#historique li {
+  padding: 6px 0;
+  border-bottom: 1px solid var(--bordure);
+}
+
+#historique:empty::after {
+  content: "Aucune conversion pour l'instant.";
+  font-size: 0.8rem;
+  color: var(--discret);
+}
+
+footer {
+  max-width: 440px;
+  text-align: center;
+  font-size: 0.75rem;
+  line-height: 1.6;
+  color: var(--discret);
+}
+
+footer a {
+  color: var(--accent);
+}
