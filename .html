@@ -11,51 +11,152 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <main class="carte">
-    <h1>Convertisseur de devises</h1>
+  <!-- Barre du haut : la paire choisie, son prix et sa variation -->
+  <header class="barre">
+    <a class="logo" href="#accueil">FX</a>
+    <strong id="paire">EUR/USD</strong>
+    <span id="prix">—</span>
+    <span id="variation"></span>
 
-    <label for="montant">Montant</label>
-    <input type="number" id="montant" value="100" min="0" max="1000000000000" step="any" inputmode="decimal">
+    <!-- Menu : chaque lien change la fin de l'adresse (#...), le JS affiche la bonne vue -->
+    <nav class="menu">
+      <a href="#accueil">Accueil</a>
+      <a href="#convertisseur">Convertisseur</a>
+      <a href="#courbes">Courbes</a>
+    </nav>
+  </header>
 
-    <div class="ligne">
-      <div>
-        <label for="de">De</label>
-        <select id="de"></select>
-      </div>
+  <!-- Bandeau qui défile avec les taux, comme sur les chaînes boursières -->
+  <div class="bandeau" aria-hidden="true">
+    <div id="defilement"></div>
+  </div>
 
-      <button type="button" id="inverser" aria-label="Inverser les devises">⇄</button>
+  <!-- ===== Vue Accueil : explication + accès aux 2 outils ===== -->
+  <section id="page-accueil">
+    <h1>Bienvenue sur FX</h1>
+    <p class="intro">
+      Convertissez de l'argent entre 20 devises et suivez l'évolution des monnaies,
+      avec les taux du jour et l'historique de la Banque centrale européenne.
+    </p>
 
-      <div>
-        <label for="vers">Vers</label>
-        <select id="vers"></select>
-      </div>
+    <div class="cartes">
+      <a class="carte-accueil" href="#convertisseur">
+        <span class="icone">⇄</span>
+        <h2>Convertisseur</h2>
+        <p>Entrez un montant, choisissez deux devises : le résultat s'affiche tout de suite.
+          Ajoutez les frais de votre banque pour savoir ce que vous recevrez vraiment.</p>
+        <span class="ouvrir">Ouvrir le convertisseur →</span>
+      </a>
+
+      <a class="carte-accueil" href="#courbes">
+        <span class="icone">📈</span>
+        <h2>Courbes</h2>
+        <p>Suivez un taux sur 1 mois à 5 ans, en ligne ou en bougies comme sur une plateforme de trading,
+          ou comparez la force de plusieurs monnaies entre elles.</p>
+        <span class="ouvrir">Voir les courbes →</span>
+      </a>
     </div>
 
-    <div class="bloc-resultat">
-      <p id="resultat" aria-live="polite">Chargement des taux...</p>
-      <p id="unitaire"></p>
-      <button type="button" id="copier">Copier le résultat</button>
+    <div class="infos">
+      <div>
+        <h3>D'où viennent les taux ?</h3>
+        <p>Les taux du jour viennent d'ExchangeRate-API, l'historique de la Banque centrale européenne.
+          Sans internet, des taux approximatifs sont utilisés.</p>
+      </div>
+      <div>
+        <h3>Comment lire une courbe ?</h3>
+        <p>EUR/USD = 1,10 veut dire que 1 euro vaut 1,10 dollar. Si la courbe monte, l'euro se renforce
+          face au dollar. En vert : hausse, en rouge : baisse.</p>
+      </div>
+      <div>
+        <h3>Vos données</h3>
+        <p>Aucun compte, aucun cookie, rien n'est enregistré. Seule votre adresse IP est vue par les
+          fournisseurs de taux quand la page les télécharge.</p>
+      </div>
     </div>
+  </section>
 
-    <p id="info"></p>
-
-    <section>
-      <h2>Évolution sur 30 jours</h2>
-      <svg id="graphique" viewBox="0 0 300 100" preserveAspectRatio="none" aria-hidden="true">
-        <polyline id="courbe" points=""></polyline>
-      </svg>
+  <div class="page">
+    <!-- Zone de gauche : le graphique -->
+    <section class="zone-graphique">
+      <div class="outils">
+        <div class="periodes">
+          <button type="button" data-jours="30" class="actif">1M</button>
+          <button type="button" data-jours="90">3M</button>
+          <button type="button" data-jours="365">1A</button>
+          <button type="button" data-jours="1825">5A</button>
+        </div>
+        <!-- Ligne ou bougies (seulement en mode Paire) -->
+        <div class="types" id="types">
+          <button type="button" data-type="ligne" class="actif">Ligne</button>
+          <button type="button" data-type="bougies">Bougies</button>
+        </div>
+        <!-- Paire = une courbe (ex : EUR/USD) ; Monnaies = la force de plusieurs monnaies en % -->
+        <div class="modes">
+          <button type="button" data-mode="paire" class="actif">Paire</button>
+          <button type="button" data-mode="monnaies">Monnaies</button>
+        </div>
+      </div>
+      <div id="choix-monnaies" hidden></div>
+      <canvas id="graphique" aria-label="Graphique de l'évolution du taux"></canvas>
       <p id="info-graphique"></p>
     </section>
 
-    <section>
-      <h2>Dernières conversions</h2>
-      <ul id="historique"></ul>
-    </section>
-  </main>
+    <!-- Zone de droite : convertisseur, liste de surveillance, historique -->
+    <aside>
+      <div class="panneau" id="panneau-convertir">
+        <h2>Convertir</h2>
+
+        <label for="montant">Montant</label>
+        <input type="number" id="montant" value="100" min="0" max="1000000000000" step="any" inputmode="decimal">
+
+        <!-- Montants rapides en un clic -->
+        <div class="rapides">
+          <button type="button" data-montant="10">10</button>
+          <button type="button" data-montant="50">50</button>
+          <button type="button" data-montant="100">100</button>
+          <button type="button" data-montant="1000">1 000</button>
+        </div>
+
+        <div class="ligne">
+          <div>
+            <label for="de">De</label>
+            <select id="de"></select>
+          </div>
+          <button type="button" id="inverser" aria-label="Inverser les devises">⇄</button>
+          <div>
+            <label for="vers">Vers</label>
+            <select id="vers"></select>
+          </div>
+        </div>
+
+        <label for="frais">Frais de la banque (%)</label>
+        <input type="number" id="frais" value="0" min="0" max="20" step="0.1" inputmode="decimal">
+
+        <div class="bloc-resultat">
+          <p id="resultat" aria-live="polite">Chargement des taux...</p>
+          <p id="apres-frais"></p>
+          <p id="unitaire"></p>
+          <button type="button" id="copier">Copier le résultat</button>
+        </div>
+        <p id="info"></p>
+      </div>
+
+      <div class="panneau">
+        <h2>Liste de surveillance</h2>
+        <ul id="liste"></ul>
+      </div>
+
+      <div class="panneau" id="panneau-historique">
+        <h2>Dernières conversions</h2>
+        <ul id="historique"></ul>
+      </div>
+    </aside>
+  </div>
 
   <!-- Mentions RGPD : pas de cookie, pas de traceur, rien n'est stocké -->
   <footer>
-    Aucun cookie, aucun traceur, aucune donnée personnelle collectée ou stockée.<br>
+    Aucun cookie, aucun traceur, aucune donnée personnelle collectée ou stockée.
     Taux fournis à titre indicatif par
     <a href="https://www.exchangerate-api.com" target="_blank" rel="noopener noreferrer">ExchangeRate-API</a>
     et
