@@ -70,13 +70,19 @@ Les taux sont fournis **à titre indicatif** et ne constituent pas un conseil fi
 
 ## Versions
 
-- `v1-sobre` : première version, au design clair et sobre (étiquette git).
-- `tradingview` : version actuelle, avec le thème trading, les courbes et l'accueil (branche git).
+| Version         | Où la trouver                | Contenu                                                    |
+|-----------------|------------------------------|------------------------------------------------------------|
+| Actuelle        | branche `main`               | Thème trading, accueil, courbes, bougies, mode Monnaies    |
+| Première (v1)   | étiquette `v1-sobre`         | Convertisseur simple au design clair et sobre              |
+
+Pour voir la première version puis revenir à la version actuelle :
 
 ```bash
-git switch main          # revenir à la version sobre
-git switch tradingview   # revenir à la version actuelle
+git switch --detach v1-sobre   # afficher la version sobre (lecture seule)
+git switch main                # revenir à la version actuelle
 ```
+
+Sur GitHub, la première version est visible dans l'onglet **Tags** → `v1-sobre`.
 
 ## Limites connues
 
